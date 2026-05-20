@@ -1,0 +1,49 @@
+{
+  "race_name": "British Grand Prix 2024",
+  "circuit": "Silverstone Circuit",
+  "total_laps": 52,
+  "scenarios": [
+    {
+      "lap": 18,
+      "description": "Rain approaching - strategic tire change opportunity",
+      "conditions": {
+        "lap_number": 18,
+        "total_laps": 52,
+        "tire_wear": 48.0,
+        "tire_compound": "soft",
+        "tire_age": 10,
+        "weather": "light_rain",
+        "track_temp": 28.0,
+        "air_temp": 18.0,
+        "position": 5,
+        "fuel_level": 72.0,
+        "gap_to_leader": 12.8,
+        "gap_to_behind": 2.5,
+        "track_conditions": "green"
+      },
+      "expected_strategy": "pit_now",
+      "reasoning": "Early switch to intermediates can provide significant advantage"
+    },
+    {
+      "lap": 35,
+      "description": "Track drying - return to slicks decision",
+      "conditions": {
+        "lap_number": 35,
+        "total_laps": 52,
+        "tire_wear": 65.0,
+        "tire_compound": "intermediate",
+        "tire_age": 17,
+        "weather": "mixed",
+        "track_temp": 32.0,
+        "air_temp": 20.0,
+        "position": 3,
+        "fuel_level": 48.0,
+        "gap_to_leader": 8.2,
+        "gap_to_behind": 4.1,
+        "track_conditions": "green"
+      },
+      "expected_strategy": "pit_next_lap",
+      "reasoning": "Track drying but timing is critical - wait one more lap for optimal switch"
+    }
+  ]
+}

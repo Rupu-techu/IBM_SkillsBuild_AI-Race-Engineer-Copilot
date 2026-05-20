@@ -1,0 +1,49 @@
+{
+  "race_name": "Monaco Grand Prix 2024",
+  "circuit": "Circuit de Monaco",
+  "total_laps": 78,
+  "scenarios": [
+    {
+      "lap": 25,
+      "description": "Mid-race tire management decision",
+      "conditions": {
+        "lap_number": 25,
+        "total_laps": 78,
+        "tire_wear": 82.0,
+        "tire_compound": "medium",
+        "tire_age": 16,
+        "weather": "dry",
+        "track_temp": 42.0,
+        "air_temp": 26.0,
+        "position": 3,
+        "fuel_level": 68.0,
+        "gap_to_leader": 8.5,
+        "gap_to_behind": 3.2,
+        "track_conditions": "green"
+      },
+      "expected_strategy": "pit_now",
+      "reasoning": "High tire degradation on Monaco's demanding circuit requires fresh tires"
+    },
+    {
+      "lap": 45,
+      "description": "Late race push for podium",
+      "conditions": {
+        "lap_number": 45,
+        "total_laps": 78,
+        "tire_wear": 55.0,
+        "tire_compound": "hard",
+        "tire_age": 8,
+        "weather": "dry",
+        "track_temp": 45.0,
+        "air_temp": 28.0,
+        "position": 4,
+        "fuel_level": 42.0,
+        "gap_to_leader": 15.2,
+        "gap_to_behind": 0.9,
+        "track_conditions": "green"
+      },
+      "expected_strategy": "push_hard",
+      "reasoning": "Close gap behind requires defensive driving with fresh tires"
+    }
+  ]
+}
