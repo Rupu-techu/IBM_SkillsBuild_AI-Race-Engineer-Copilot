@@ -1,0 +1,43 @@
+# Streamlit Configuration for AI Race Engineer Copilot
+# Production-ready settings for deployment
+
+[theme]
+# Racing-inspired color scheme
+primaryColor = "#e63946"
+backgroundColor = "#0a0a0a"
+secondaryBackgroundColor = "#1a1a2e"
+textColor = "#ffffff"
+font = "monospace"
+
+[server]
+# Server configuration
+port = 8501
+headless = false
+enableCORS = false
+enableXsrfProtection = true
+maxUploadSize = 200
+
+# Performance settings
+runOnSave = true
+allowRunOnSave = true
+
+[browser]
+# Browser settings
+gatherUsageStats = false
+serverAddress = "localhost"
+serverPort = 8501
+
+[runner]
+# Runner configuration
+magicEnabled = true
+fastReruns = true
+
+[client]
+# Client settings
+showErrorDetails = true
+toolbarMode = "minimal"
+
+[logger]
+# Logging configuration
+level = "info"
+messageFormat = "%(asctime)s %(message)s"
