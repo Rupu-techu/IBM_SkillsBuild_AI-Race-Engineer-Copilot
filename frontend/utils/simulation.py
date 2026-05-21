@@ -282,6 +282,55 @@ class RaceSimulator:
             del st.session_state.simulation_data
 
 
+def update_simulation():
+    """
+    Update simulation state - called on each app rerun when simulation is running
+    """
+    if not st.session_state.get('simulation_running', False):
+        return
+    
+    # Initialize simulator if not exists
+    if 'race_simulator' not in st.session_state:
+        st.session_state.race_simulator = RaceSimulator()
+    
+    simulator = st.session_state.race_simulator
+    
+    # Check if enough time has passed for next lap (simulate 1 lap every 3 seconds)
+    current_time = time.time()
+    last_update = st.session_state.get('last_simulation_update', 0)
+    
+    if current_time - last_update >= 3:  # 3 seconds per lap
+        # Advance lap
+        new_data = simulator.advance_lap()
+        
+        if new_data:
+            # Update current lap in session state
+            st.session_state.current_lap = new_data.get('lap', st.session_state.get('current_lap', 1))
+            st.session_state.tire_wear = new_data.get('tire_wear', 0)
+            st.session_state.fuel_level = new_data.get('fuel_level', 100)
+            st.session_state.tire_age = new_data.get('tire_age', 0)
+            
+            # Add commentary for significant events
+            if 'commentary_history' not in st.session_state:
+                st.session_state.commentary_history = []
+            
+            # Check for critical conditions
+            if new_data.get('tire_wear', 0) > 85:
+                st.session_state.commentary_history.append({
+                    "lap": new_data['lap'],
+                    "type": "critical",
+                    "message": f"Box box box! Tire wear critical at {new_data['tire_wear']:.0f}%."
+                })
+            elif new_data.get('fuel_level', 100) < 20:
+                st.session_state.commentary_history.append({
+                    "lap": new_data['lap'],
+                    "type": "critical",
+                    "message": f"Fuel critical at {new_data['fuel_level']:.0f}%. Consider pit strategy."
+                })
+        
+        st.session_state.last_simulation_update = current_time
+
+
 def create_demo_scenario(scenario_name: str) -> Dict:
     """
     Create predefined demo scenarios
@@ -289,7 +338,7 @@ def create_demo_scenario(scenario_name: str) -> Dict:
     Args:
         scenario_name: Name of the scenario
         
-    Returns:
+        Returns:
         Race conditions dictionary
     """
     scenarios = {

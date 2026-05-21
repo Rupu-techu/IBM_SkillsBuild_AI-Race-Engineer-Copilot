@@ -1,225 +1,194 @@
 """
-Sidebar component for race condition inputs
+Racing Sidebar Component
+Compact F1 pit wall controls
 """
 
 import streamlit as st
 from src.core.race_analyzer import RaceConditions, TireCompound, WeatherCondition
 
 
-def render_sidebar() -> RaceConditions:
+def render_racing_sidebar() -> RaceConditions:
     """
-    Render sidebar with race condition inputs
+    Render premium racing sidebar with controls
     
     Returns:
         RaceConditions object with user inputs
     """
     
-    st.sidebar.markdown("## 🎛️ RACE CONTROLS")
-    st.sidebar.markdown("---")
+    st.markdown("### ⚙️ RACE CONTROLS", unsafe_allow_html=True)
     
-    # Race Progress Section
-    st.sidebar.markdown("### 📊 Race Progress")
-    col1, col2 = st.sidebar.columns(2)
+    # Simulation Controls
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("▶️", use_container_width=True, help="Start", key="start_btn"):
+            st.session_state.simulation_running = True
+            st.session_state.current_lap = st.session_state.get('current_lap', 1)
+            st.rerun()
+    
+    with col2:
+        if st.button("⏸️", use_container_width=True, help="Pause", key="pause_btn"):
+            st.session_state.simulation_running = False
+            st.rerun()
+    
+    with col3:
+        if st.button("🔄", use_container_width=True, help="Reset", key="reset_btn"):
+            st.session_state.simulation_running = False
+            st.session_state.current_lap = 1
+            st.session_state.fuel_level = 100.0
+            st.session_state.tire_wear = 0.0
+            st.rerun()
+    
+    st.markdown("---", unsafe_allow_html=True)
+    
+    # Race Progress
+    st.markdown("### 📊 RACE", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
     with col1:
         lap_number = st.number_input(
-            "Current Lap",
+            "Lap",
             min_value=1,
             max_value=100,
-            value=25,
+            value=st.session_state.get('current_lap', 25),
             step=1,
-            help="Current lap number in the race"
+            key="lap_input"
         )
     with col2:
         total_laps = st.number_input(
-            "Total Laps",
+            "Total",
             min_value=1,
             max_value=100,
-            value=50,
+            value=58,
             step=1,
-            help="Total number of laps in the race"
+            key="total_laps_input"
         )
     
-    # Position
-    position = st.sidebar.number_input(
-        "Current Position",
+    position = st.number_input(
+        "Position",
         min_value=1,
         max_value=20,
         value=3,
         step=1,
-        help="Current race position"
+        key="position_input"
     )
     
-    st.sidebar.markdown("---")
+    st.markdown("---", unsafe_allow_html=True)
     
-    # Tire Section
-    st.sidebar.markdown("### 🛞 Tire Status")
+    # Tire Management
+    st.markdown("### 🛞 TIRES", unsafe_allow_html=True)
     
-    tire_compound = st.sidebar.selectbox(
-        "Tire Compound",
+    tire_compound = st.selectbox(
+        "Compound",
         options=["soft", "medium", "hard", "intermediate", "wet"],
         index=1,
-        help="Current tire compound"
+        key="tire_compound_select"
     )
     
-    tire_wear = st.sidebar.slider(
-        "Tire Wear (%)",
+    tire_wear = st.slider(
+        "Wear %",
         min_value=0,
         max_value=100,
-        value=78,
+        value=int(st.session_state.get('tire_wear', 78)),
         step=1,
-        help="Current tire degradation percentage"
+        key="tire_wear_input"
     )
     
-    tire_age = st.sidebar.number_input(
-        "Tire Age (laps)",
+    tire_age = st.number_input(
+        "Age (laps)",
         min_value=0,
         max_value=50,
-        value=16,
+        value=st.session_state.get('tire_age', 16),
         step=1,
-        help="Number of laps on current tires"
+        key="tire_age_input"
     )
     
-    # Visual tire wear indicator
-    if tire_wear < 50:
-        tire_status = "🟢 GOOD"
-        tire_color = "green"
-    elif tire_wear < 80:
-        tire_status = "🟡 MODERATE"
-        tire_color = "yellow"
-    else:
-        tire_status = "🔴 CRITICAL"
-        tire_color = "red"
+    st.markdown("---", unsafe_allow_html=True)
     
-    st.sidebar.markdown(f"**Status:** <span class='status-{tire_color}'>{tire_status}</span>", 
-                       unsafe_allow_html=True)
+    # Fuel
+    st.markdown("### ⛽ FUEL", unsafe_allow_html=True)
     
-    st.sidebar.markdown("---")
-    
-    # Fuel Section
-    st.sidebar.markdown("### ⛽ Fuel Management")
-    
-    fuel_level = st.sidebar.slider(
-        "Fuel Level (%)",
+    fuel_level = st.slider(
+        "Level %",
         min_value=0,
         max_value=100,
-        value=65,
+        value=int(st.session_state.get('fuel_level', 65)),
         step=1,
-        help="Current fuel level percentage"
+        key="fuel_input"
     )
     
-    # Visual fuel indicator
-    if fuel_level < 20:
-        fuel_status = "🔴 CRITICAL"
-        fuel_color = "red"
-    elif fuel_level < 40:
-        fuel_status = "🟡 LOW"
-        fuel_color = "yellow"
-    else:
-        fuel_status = "🟢 ADEQUATE"
-        fuel_color = "green"
+    st.markdown("---", unsafe_allow_html=True)
     
-    st.sidebar.markdown(f"**Status:** <span class='status-{fuel_color}'>{fuel_status}</span>", 
-                       unsafe_allow_html=True)
+    # Weather
+    st.markdown("### 🌤️ WEATHER", unsafe_allow_html=True)
     
-    st.sidebar.markdown("---")
-    
-    # Weather Section
-    st.sidebar.markdown("### 🌤️ Weather Conditions")
-    
-    weather = st.sidebar.selectbox(
-        "Weather",
+    weather = st.selectbox(
+        "Conditions",
         options=["dry", "light_rain", "heavy_rain", "mixed"],
         index=0,
-        help="Current weather conditions"
+        key="weather_select"
     )
     
-    col1, col2 = st.sidebar.columns(2)
+    col1, col2 = st.columns(2)
     with col1:
         track_temp = st.number_input(
-            "Track Temp (°C)",
+            "Track °C",
             min_value=0,
             max_value=60,
             value=42,
             step=1,
-            help="Track surface temperature"
+            key="track_temp_input"
         )
     with col2:
         air_temp = st.number_input(
-            "Air Temp (°C)",
+            "Air °C",
             min_value=0,
             max_value=50,
             value=26,
             step=1,
-            help="Ambient air temperature"
+            key="air_temp_input"
         )
     
-    st.sidebar.markdown("---")
+    st.markdown("---", unsafe_allow_html=True)
     
-    # Competitive Position Section
-    st.sidebar.markdown("### 🏁 Competitive Position")
+    # Gaps
+    st.markdown("### 🏁 GAPS", unsafe_allow_html=True)
     
-    col1, col2 = st.sidebar.columns(2)
+    col1, col2 = st.columns(2)
     with col1:
         gap_to_leader = st.number_input(
-            "Gap to Leader (s)",
+            "Leader (s)",
             min_value=0.0,
             max_value=120.0,
             value=8.5,
             step=0.1,
-            help="Time gap to race leader"
+            key="gap_leader_input"
         )
     with col2:
         gap_to_behind = st.number_input(
-            "Gap Behind (s)",
+            "Behind (s)",
             min_value=0.0,
             max_value=120.0,
             value=3.2,
             step=0.1,
-            help="Time gap to car behind"
+            key="gap_behind_input"
         )
     
-    st.sidebar.markdown("---")
+    st.markdown("---", unsafe_allow_html=True)
     
-    # Track Conditions Section
-    st.sidebar.markdown("### 🚦 Track Status")
+    # Track Status
+    st.markdown("### 🚦 TRACK", unsafe_allow_html=True)
     
-    track_conditions = st.sidebar.selectbox(
-        "Track Conditions",
+    track_conditions = st.selectbox(
+        "Status",
         options=["green", "yellow", "safety_car"],
         index=0,
-        help="Current track status"
+        key="track_status_select"
     )
     
-    # Safety car indicator
-    if track_conditions == "safety_car":
-        st.sidebar.warning("🚨 SAFETY CAR DEPLOYED")
-    elif track_conditions == "yellow":
-        st.sidebar.warning("⚠️ YELLOW FLAG")
-    else:
-        st.sidebar.success("✅ GREEN FLAG")
-    
-    st.sidebar.markdown("---")
-    
-    # Driver Mode Section
-    st.sidebar.markdown("### 🎮 Driver Mode")
-    
-    driver_mode = st.sidebar.radio(
-        "Aggression Level",
-        options=["Conservative", "Balanced", "Aggressive"],
-        index=1,
-        help="Driver aggression mode"
-    )
-    
-    st.sidebar.markdown("---")
+    st.markdown("---", unsafe_allow_html=True)
     
     # Analyze Button
-    analyze_button = st.sidebar.button(
-        "🤖 ANALYZE STRATEGY",
-        use_container_width=True,
-        type="primary"
-    )
-    
-    if analyze_button:
+    if st.button("🤖 ANALYZE STRATEGY", use_container_width=True, type="primary", key="analyze_btn"):
         st.session_state.analyze_button_clicked = True
     
     # Create RaceConditions object
@@ -241,8 +210,5 @@ def render_sidebar() -> RaceConditions:
     
     # Store in session state
     st.session_state.race_conditions = race_conditions
-    st.session_state.driver_mode = driver_mode
     
     return race_conditions
-
-# Made with Bob

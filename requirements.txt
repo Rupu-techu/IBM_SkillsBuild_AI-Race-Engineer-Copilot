@@ -1,21 +1,21 @@
 # Core Dependencies
 python-dotenv==1.0.0
-pydantic==2.5.0
-fastapi==0.104.1
-uvicorn==0.24.0
+pydantic>=2.7.4
+#fastapi==0.104.1
+#uvicorn==0.24.0
 
 # IBM watsonx.ai and Granite
-ibm-watsonx-ai==0.2.6
+ibm-watsonx-ai>=1.1.14
 ibm-watson==7.0.1
-langchain==0.1.0
-langchain-ibm==0.1.0
+langchain==0.3.7
+langchain-ibm==0.3.0
 
 # Langflow
-langflow==0.6.0
+#langflow==1.0.3
 
 # Data Processing
 pandas==2.1.3
-numpy==1.26.2
+numpy==1.26.4
 scipy==1.11.4
 
 # Docling (Document Processing)
@@ -23,7 +23,6 @@ docling==0.1.0
 
 # API and Web
 requests==2.31.0
-httpx==0.25.2
 aiohttp==3.9.1
 
 # Utilities

@@ -1,166 +1,226 @@
 """
-AI Race Engineer Copilot - Streamlit Dashboard
-Real-time racing strategy assistant with IBM Granite AI
+AI Race Engineer Copilot - Streamlit dashboard entrypoint.
 """
 
-import streamlit as st
+from __future__ import annotations
+
+import logging
 import sys
-import os
 from pathlib import Path
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+import streamlit as st
 
-from frontend.components.sidebar import render_sidebar
-from frontend.components.telemetry import render_telemetry_panel
-from frontend.components.ai_recommendations import render_ai_recommendations
-from frontend.components.visualizations import render_visualizations
-from frontend.utils.session_state import initialize_session_state
-from src.core.race_analyzer import RaceAnalyzer, RaceConditions, TireCompound, WeatherCondition
-from src.ai.granite_engine import GraniteEngine
 
-# Page configuration
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from frontend.utils.watsonx_config import (  # noqa: E402
+    build_watsonx_diagnostics,
+    get_watsonx_config,
+    load_environment,
+)
+from frontend.utils.style_loader import inject_primary_stylesheet  # noqa: E402
+from frontend.utils.html_render import render_html  # noqa: E402
+
+
+load_environment()
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+LOGGER = logging.getLogger(__name__)
+
+from frontend.components.ai_strategy import render_hero_ai_strategy  # noqa: E402
+from frontend.components.analytics import render_analytics_section  # noqa: E402
+from frontend.components.driver_status import render_driver_status  # noqa: E402
+from frontend.components.sidebar import render_racing_sidebar  # noqa: E402
+from frontend.components.track_viz import render_track_visualization  # noqa: E402
+from frontend.utils.session_state import initialize_session_state  # noqa: E402
+from frontend.utils.simulation import update_simulation  # noqa: E402
+from src.ai.granite_engine import GraniteEngine  # noqa: E402
+from src.core.race_analyzer import RaceAnalyzer  # noqa: E402
+
+
 st.set_page_config(
     page_title="AI Race Engineer Copilot",
-    page_icon="🏎️",
+    page_icon="AI",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# Custom CSS for racing theme
-st.markdown("""
-<style>
-    /* Dark racing theme */
-    .stApp {
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-    }
-    
-    /* Header styling */
-    .main-header {
-        background: linear-gradient(90deg, #e63946 0%, #f77f00 100%);
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(230, 57, 70, 0.3);
-    }
-    
-    .main-header h1 {
-        color: white;
-        font-family: 'Courier New', monospace;
-        font-weight: bold;
-        margin: 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-    
-    /* Metric cards */
-    .metric-card {
-        background: rgba(26, 26, 46, 0.8);
-        border: 2px solid #e63946;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 10px 0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-    
-    /* Status indicators */
-    .status-green {
-        color: #06ffa5;
-        font-weight: bold;
-    }
-    
-    .status-yellow {
-        color: #ffd60a;
-        font-weight: bold;
-    }
-    
-    .status-red {
-        color: #e63946;
-        font-weight: bold;
-    }
-    
-    /* Sidebar styling */
-    .css-1d391kg {
-        background-color: #16213e;
-    }
-    
-    /* Button styling */
-    .stButton>button {
-        background: linear-gradient(90deg, #e63946 0%, #f77f00 100%);
-        color: white;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        transition: all 0.3s;
-    }
-    
-    .stButton>button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(230, 57, 70, 0.5);
-    }
-</style>
-""", unsafe_allow_html=True)
 
-def main():
-    """Main application entry point"""
-    
-    # Initialize session state
-    initialize_session_state()
-    
-    # Header
-    st.markdown("""
-    <div class="main-header">
-        <h1>🏎️ AI RACE ENGINEER COPILOT</h1>
-        <p style="color: white; margin: 5px 0 0 0; font-size: 14px;">
-            Powered by IBM Granite AI | Real-time Strategy Analysis
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Initialize engines
-    if 'race_analyzer' not in st.session_state:
+def _classify_error(message: str) -> str:
+    lowered = message.lower()
+    if "missing" in lowered:
+        return "Missing environment variables"
+    if "no_associated_service_instance_error" in lowered:
+        return "IBM project association issue"
+    if "apikey" in lowered or "api key" in lowered or "iam token" in lowered:
+        return "Authentication issue"
+    if "project" in lowered:
+        return "Project configuration issue"
+    if (
+        "dns" in lowered
+        or "host" in lowered
+        or "connection" in lowered
+        or "timeout" in lowered
+        or "forbidden" in lowered
+        or "winerror 10013" in lowered
+        or "socket" in lowered
+    ):
+        return "Network connectivity issue"
+    return "Initialization error"
+
+
+def initialize_granite_engine():
+    """Create or refresh the Granite engine when config changes."""
+    config = get_watsonx_config()
+    fingerprint = config.fingerprint
+
+    if "race_analyzer" not in st.session_state:
         st.session_state.race_analyzer = RaceAnalyzer()
-    
-    if 'granite_engine' not in st.session_state:
-        try:
-            st.session_state.granite_engine = GraniteEngine()
-        except Exception as e:
-            st.warning(f"Running in demo mode: {str(e)}")
-            st.session_state.granite_engine = GraniteEngine()
-    
-    # Sidebar inputs
-    race_conditions = render_sidebar()
-    
-    # Main content area
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        # Telemetry panel
-        render_telemetry_panel(race_conditions)
-        
-        # Visualizations
-        render_visualizations(race_conditions)
-    
-    with col2:
-        # AI Recommendations
-        if st.session_state.get('analyze_button_clicked', False):
-            with st.spinner("🤖 AI analyzing race conditions..."):
-                render_ai_recommendations(
-                    race_conditions,
-                    st.session_state.race_analyzer,
-                    st.session_state.granite_engine
+
+    should_recreate = (
+        "granite_engine" not in st.session_state
+        or st.session_state.get("watsonx_config_fingerprint") != fingerprint
+    )
+
+    if should_recreate:
+        st.session_state.watsonx_config_fingerprint = fingerprint
+        st.session_state.granite_engine = GraniteEngine()
+
+    engine = st.session_state.granite_engine
+    diagnostics = build_watsonx_diagnostics(
+        config,
+        dotenv_loaded=load_environment(),
+        connection_ok=engine.connection_ok,
+        mock_mode=engine.mock_mode,
+        connection_error=engine.initialization_error,
+    )
+
+    LOGGER.info("API KEY EXISTS: %s", diagnostics["api_key_detected"])
+    LOGGER.info("PROJECT ID EXISTS: %s", diagnostics["project_id_detected"])
+    LOGGER.info("URL: %s", diagnostics["service_url"])
+    LOGGER.info("MODEL: %s", diagnostics["active_model"])
+
+    print("API KEY EXISTS:", diagnostics["api_key_detected"])
+    print("PROJECT ID EXISTS:", diagnostics["project_id_detected"])
+    print("URL:", diagnostics["service_url"])
+    print("API KEY MASKED:", diagnostics["api_key_masked"])
+    print("PROJECT ID MASKED:", diagnostics["project_id_masked"])
+
+    st.session_state.watsonx_diagnostics = diagnostics
+    return engine, diagnostics
+
+
+def render_startup_validation_panel(diagnostics: dict):
+    """Render the developer diagnostics panel."""
+    with st.expander("Watsonx Diagnostics", expanded=diagnostics["mock_mode"]):
+        metric_cols = st.columns(3)
+        metric_cols[0].metric("dotenv loaded", "Yes" if diagnostics["dotenv_loaded"] else "No")
+        metric_cols[1].metric("API key detected", "Yes" if diagnostics["api_key_detected"] else "No")
+        metric_cols[2].metric(
+            "Project ID detected", "Yes" if diagnostics["project_id_detected"] else "No"
+        )
+
+        metric_cols = st.columns(3)
+        metric_cols[0].metric("Connection", diagnostics["connection_status"])
+        metric_cols[1].metric("Mock mode", "Enabled" if diagnostics["mock_mode"] else "Disabled")
+        metric_cols[2].metric("Env file", "Present" if diagnostics["env_file_exists"] else "Missing")
+
+        st.caption(f"Env path: `{diagnostics['env_path']}`")
+        st.caption(f"Model: `{diagnostics['active_model']}`")
+        st.caption(f"Service URL: `{diagnostics['service_url']}`")
+        st.caption(f"API key: `{diagnostics['api_key_masked']}`")
+        st.caption(f"Project ID: `{diagnostics['project_id_masked']}`")
+
+        if diagnostics["config_errors"]:
+            st.error(
+                "Configuration issues detected: "
+                + ", ".join(
+                    f"{name} ({message})" for name, message in diagnostics["config_errors"].items()
                 )
-    
-    # Footer
-    st.markdown("---")
-    st.markdown("""
-    <div style="text-align: center; color: #888; font-size: 12px;">
-        <p>AI Race Engineer Copilot | IBM SkillsBuild AI Builders Challenge</p>
-        <p>Built with IBM Granite, watsonx.ai, and Langflow</p>
+            )
+
+        if diagnostics["connection_error"]:
+            st.error(
+                f"{_classify_error(diagnostics['connection_error'])}: {diagnostics['connection_error']}"
+            )
+        if diagnostics.get("remediation"):
+            st.info(diagnostics["remediation"])
+
+
+inject_primary_stylesheet()
+initialize_session_state()
+granite_engine, diagnostics = initialize_granite_engine()
+
+if st.session_state.get("simulation_running", False):
+    update_simulation()
+
+st.markdown(
+    """
+    <div class="top-nav animate-fade-in-up">
+        <div class="nav-brand">
+            <div class="nav-title">AI RACE ENGINEER COPILOT</div>
+            <div class="nav-badge">IBM GRANITE</div>
+        </div>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            <span style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                LIVE SESSION
+            </span>
+        </div>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
-if __name__ == "__main__":
-    main()
+render_html(
+    """
+    <div class="dashboard-intro">
+        <div class="dashboard-kicker">Formula 1 Strategy Console</div>
+        <div class="dashboard-headline">Race control signals, AI strategy, and telemetry aligned on one pit wall.</div>
+    </div>
+    """
+)
 
-# Made with Bob
+if diagnostics["mock_mode"]:
+    st.warning(
+        "watsonx.ai is not connected. The app is using mock responses until the startup issue is resolved."
+    )
+else:
+    st.success(f"watsonx.ai connected successfully with model `{diagnostics['active_model']}`.")
+
+render_startup_validation_panel(diagnostics)
+
+with st.sidebar:
+    race_conditions = render_racing_sidebar()
+
+render_html('<div class="main-grid-marker"></div>')
+main_dashboard = st.container()
+
+with main_dashboard:
+    col_left, col_center, col_right = st.columns([0.95, 1.35, 1.0], gap="medium")
+
+    with col_left:
+        render_track_visualization(race_conditions)
+
+    with col_center:
+        render_hero_ai_strategy(
+            race_conditions,
+            st.session_state.race_analyzer,
+            granite_engine,
+        )
+
+    with col_right:
+        render_driver_status(race_conditions)
+
+render_html(
+    """
+    <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-label">Analytics Deck</div>
+    </div>
+    <div class="analytics-grid-marker"></div>
+    """
+)
+analytics_dashboard = st.container()
+with analytics_dashboard:
+    render_analytics_section(race_conditions)
