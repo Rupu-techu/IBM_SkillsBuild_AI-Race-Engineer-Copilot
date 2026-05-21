@@ -129,12 +129,25 @@ GRANITE_MODEL_ID=ibm/granite-13b-chat-v2
 
 ### Running the Application
 
+**Option 1: Run the Streamlit Dashboard (Recommended)**
 ```bash
-# Start the API server
-python src/api/main.py
+# Quick start with helper script
+python examples/run_dashboard.py
 
-# Or run a sample analysis
+# Or run directly
+streamlit run frontend/app.py
+```
+
+**Option 2: Run a Sample Analysis**
+```bash
+# Test the backend engine
 python examples/analyze_race.py
+```
+
+**Option 3: Start Langflow (Optional)**
+```bash
+# Start Langflow for advanced workflows
+langflow run
 ```
 
 ## 📊 Sample Usage
@@ -171,29 +184,29 @@ print(f"Reasoning: {explanation}")
 
 ## 🎓 Development Roadmap
 
-### Phase 1: Foundation (Week 1)
+### Phase 1: Foundation ✅
 - [x] Project setup and architecture design
-- [ ] IBM Granite integration
-- [ ] Basic race data models
-- [ ] Sample dataset creation
+- [x] IBM Granite integration
+- [x] Basic race data models
+- [x] Sample dataset creation
 
-### Phase 2: Core Features (Week 2)
-- [ ] Race condition analyzer
-- [ ] Strategy recommendation engine
-- [ ] Explainable AI module
-- [ ] Langflow workflow design
+### Phase 2: Core Features ✅
+- [x] Race condition analyzer
+- [x] Strategy recommendation engine
+- [x] Explainable AI module
+- [x] Langflow workflow design
 
-### Phase 3: Integration (Week 3)
-- [ ] API development
-- [ ] Docling integration for knowledge base
-- [ ] Testing and validation
-- [ ] Performance optimization
+### Phase 3: Frontend & Integration ✅
+- [x] Streamlit dashboard development
+- [x] Real-time AI recommendations
+- [x] Interactive visualizations
+- [x] Langflow integration
 
-### Phase 4: Polish (Week 4)
-- [ ] Documentation
-- [ ] Demo preparation
-- [ ] Presentation materials
-- [ ] Video demonstration
+### Phase 4: Polish & Documentation ✅
+- [x] Comprehensive documentation
+- [x] Frontend setup guide
+- [x] Langflow workflow guide
+- [x] Example scripts and demos
 
 ## 🧪 Testing
 
@@ -214,9 +227,10 @@ Detailed documentation is available in the [`docs/`](docs/) directory:
 
 - [Architecture Overview](docs/architecture.md)
 - [IBM Granite Integration Guide](docs/granite_integration.md)
-- [Langflow Workflow Design](docs/langflow_workflows.md)
-- [API Reference](docs/api_reference.md)
-- [Dataset Documentation](docs/datasets.md)
+- [Frontend Dashboard Guide](docs/FRONTEND_README.md)
+- [Frontend Setup Instructions](docs/frontend_setup.md)
+- [Langflow Workflow Setup](workflows/langflow_setup.md)
+- [Development Roadmap](docs/development_roadmap.md)
 
 ## 🎯 Hackathon Presentation Tips
 
