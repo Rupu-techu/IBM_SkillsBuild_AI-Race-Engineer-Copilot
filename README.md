@@ -320,35 +320,32 @@ langflow run
 <div align="center">
 
 ### Main Dashboard
-![Dashboard Overview](docs/images/dashboard-main.png)
+
+<img width="1919" height="1079" alt="Screenshot 2026-05-22 225550" src="https://github.com/user-attachments/assets/bbcb7ba5-f651-4ee3-893c-f68f42d6d8e7" />
+
+
 *Real-time telemetry monitoring with AI-powered insights*
 
 ### AI Strategy Panel
-![AI Recommendations](docs/images/ai-strategy.png)
+<img width="1919" height="1074" alt="Screenshot 2026-05-22 225557" src="https://github.com/user-attachments/assets/921f199c-ac84-4a51-813a-78049f964b08" />
+
+
 *Explainable AI recommendations with confidence scoring*
 
 ### Telemetry Analytics
-![Telemetry Charts](docs/images/telemetry-charts.png)
+
+<img width="1919" height="1079" alt="Screenshot 2026-05-22 225618" src="https://github.com/user-attachments/assets/9e4df8b1-4f3c-4661-b260-aa52e795079c" />
+
+
 *Interactive tire wear, fuel, and performance analytics*
 
-### Live Simulation
-![Race Simulation](docs/images/simulation.png)
-*Dynamic race events with real-time strategy updates*
+
 
 </div>
 
 ---
 
-## 🎮 Demo & Presentation
 
-### Live Demo
-**[🎬 Try the Live Demo](#)** — Experience the platform in action
-
-### Video Walkthrough
-**[🎥 Watch Demo Video](#)** — 5-minute feature showcase
-
-### Presentation Deck
-**[📊 View Slides](#)** — Hackathon presentation materials
 
 ### Demo Scenarios
 
