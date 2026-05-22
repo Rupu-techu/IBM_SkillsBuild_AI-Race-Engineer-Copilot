@@ -1,179 +1,434 @@
-# 🚀 Quick Start Guide - AI Race Engineer Copilot
+# 🚀 Quick Start Guide
 
-Get up and running with the AI Race Engineer Copilot dashboard in 5 minutes!
+Get the **AI Race Engineer Copilot** running in **5 minutes**!
 
-## Prerequisites
+---
 
-- Python 3.9 or higher
-- IBM watsonx.ai account (optional for demo mode)
+## 📋 Prerequisites
 
-## Installation
+Before you begin, ensure you have:
 
-### 1. Clone the Repository
+- ✅ **Python 3.9+** — [Download Python](https://python.org)
+- ✅ **Node.js 18+** — [Download Node.js](https://nodejs.org)
+- ✅ **Git** — [Download Git](https://git-scm.com)
+- ⚠️ **IBM watsonx.ai account** — Optional for demo mode
+
+---
+
+## ⚡ Quick Installation
+
+### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/ai-race-engineer-copilot.git
 cd ai-race-engineer-copilot
 ```
 
-### 2. Create Virtual Environment
+### Step 2: Backend Setup (Python)
 
 ```bash
 # Create virtual environment
 python -m venv venv
 
-# Activate it
+# Activate virtual environment
 # On Windows:
 venv\Scripts\activate
-
 # On macOS/Linux:
 source venv/bin/activate
-```
 
-### 3. Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 4. Configure Environment (Optional)
-
-For full IBM Granite AI functionality:
+### Step 3: Frontend Setup (React)
 
 ```bash
-# Copy example environment file
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Return to root directory
+cd ..
+```
+
+### Step 4: Environment Configuration (Optional)
+
+```bash
+# Copy environment template
 cp .env.example .env
 
-# Edit .env and add your IBM credentials:
-# IBM_WATSONX_API_KEY=your_api_key_here
-# IBM_WATSONX_PROJECT_ID=your_project_id_here
+# Edit .env with your IBM credentials (optional)
+# The app works in demo mode without credentials!
 ```
 
-**Note**: The dashboard works in demo mode without IBM credentials!
+**Example `.env` file:**
+```env
+IBM_WATSONX_API_KEY=your_api_key_here
+IBM_WATSONX_PROJECT_ID=your_project_id_here
+IBM_WATSONX_URL=https://us-south.ml.cloud.ibm.com
+GRANITE_MODEL_ID=ibm/granite-13b-chat-v2
+```
 
-## Running the Dashboard
+---
 
-### Option 1: Quick Start Script (Recommended)
+## 🎮 Running the Application
+
+### Option 1: React Frontend (Recommended) 🌟
+
+**Best for:** Interactive dashboard experience with real-time updates
 
 ```bash
-python examples/run_dashboard.py
+cd frontend
+npm run dev
 ```
 
-### Option 2: Direct Command
+**Access at:** `http://localhost:5173`
+
+**Features:**
+- ✅ Modern React UI with TailwindCSS
+- ✅ Real-time telemetry visualization
+- ✅ Interactive strategy panels
+- ✅ Live AI recommendations
+- ✅ Smooth animations and transitions
+
+---
+
+### Option 2: Python Backend Demo
+
+**Best for:** Testing core AI engine and strategy analysis
 
 ```bash
-streamlit run frontend/app.py
+# Run example race analysis
+python examples/analyze_race.py
 ```
 
-The dashboard will automatically open in your browser at `http://localhost:8501`
+**Output:**
+```
+🏎️ AI Race Engineer Copilot - Race Analysis Demo
+================================================
 
-## Using the Dashboard
+Analyzing Race Scenario 1: Critical Tire Wear
+----------------------------------------------
+Lap: 28/50
+Position: P3
+Tire Wear: 87.5%
+Tire Age: 18 laps (Medium)
+Fuel: 62.0%
 
-### Step 1: Configure Race Conditions
+🤖 AI Recommendation:
+Action: PIT_NOW
+Confidence: 92%
+Risk Level: HIGH
 
-In the sidebar, set:
-- **Current Lap**: 25
-- **Total Laps**: 50
-- **Position**: 3
-- **Tire Wear**: 78%
-- **Tire Compound**: Medium
-- **Fuel Level**: 65%
-- **Weather**: Dry
+💡 Reasoning:
+Pit now because tire degradation is critical at 87.5%...
+```
 
-### Step 2: Analyze Strategy
+---
+
+### Option 3: Langflow Workflows (Advanced)
+
+**Best for:** Visual AI workflow design and orchestration
+
+```bash
+# Start Langflow server
+langflow run
+```
+
+**Access at:** `http://localhost:7860`
+
+**Features:**
+- ✅ Visual workflow editor
+- ✅ Drag-and-drop components
+- ✅ IBM Granite integration
+- ✅ Real-time testing
+
+**[📖 Langflow Setup Guide](workflows/langflow_setup.md)**
+
+---
+
+## 🎯 Using the Dashboard
+
+### 1️⃣ Configure Race Conditions
+
+In the **sidebar**, set your race parameters:
+
+| Parameter | Example Value | Description |
+|-----------|---------------|-------------|
+| **Current Lap** | 28 | Current lap number |
+| **Total Laps** | 50 | Total race laps |
+| **Position** | 3 | Current race position |
+| **Tire Wear** | 78% | Tire degradation level |
+| **Tire Compound** | Medium | Current tire type |
+| **Tire Age** | 15 laps | Laps on current tires |
+| **Fuel Level** | 65% | Remaining fuel |
+| **Weather** | Dry | Current conditions |
+
+### 2️⃣ Analyze Strategy
 
 Click the **"🤖 ANALYZE STRATEGY"** button
 
-### Step 3: Review Results
+The AI will process your race conditions and generate:
+- ✅ Primary recommendation (PIT NOW, STAY OUT, etc.)
+- ✅ Confidence score (0-100%)
+- ✅ Risk assessment (LOW, MEDIUM, HIGH, CRITICAL)
+- ✅ Detailed reasoning with data support
+- ✅ Expected outcome
 
-The AI will provide:
-- ✅ Primary strategy recommendation
-- 📊 Confidence score
-- ⚠️ Risk assessment
-- 💡 Detailed reasoning
-- 🔄 Alternative strategies
+### 3️⃣ Review AI Insights
 
-### Step 4: Explore Analytics
+**Strategy Panel:**
+- **Action** — What to do (pit, stay out, push hard)
+- **Confidence** — How certain the AI is
+- **Risk Level** — Potential consequences
+- **Reasoning** — Why this strategy is optimal
+- **Alternatives** — Other options with trade-offs
+
+### 4️⃣ Explore Analytics
 
 Switch between tabs to view:
-- 🛞 Tire degradation curves
-- ⛽ Fuel consumption analysis
-- 📈 Lap performance trends
-- ⏱️ Pit strategy windows
 
-## Example Scenarios
+- **🛞 Tire Analysis** — Degradation curves and predictions
+- **⛽ Fuel Strategy** — Consumption rates and finish projections
+- **📈 Performance** — Lap times and pace analysis
+- **⏱️ Pit Windows** — Optimal timing visualization
 
-### Scenario 1: High Tire Wear
+---
+
+## 🎬 Demo Scenarios
+
+Try these pre-configured scenarios to see the AI in action:
+
+### Scenario 1: Critical Tire Wear 🔴
+
 ```
 Lap: 30/50
-Tire Wear: 85%
-Tire Age: 18 laps
-→ Expected: "PIT NOW" recommendation
+Tire Wear: 88%
+Tire Age: 20 laps
+Compound: Soft
 ```
 
-### Scenario 2: Fuel Critical
+**Expected:** `PIT_NOW` recommendation with high confidence
+
+---
+
+### Scenario 2: Fuel Emergency ⛽
+
 ```
-Lap: 40/50
-Fuel Level: 15%
-→ Expected: "PIT NOW" for fuel
+Lap: 42/50
+Fuel Level: 12%
+Tire Wear: 65%
 ```
 
-### Scenario 3: Optimal Strategy
+**Expected:** `PIT_NOW` for fuel with critical risk warning
+
+---
+
+### Scenario 3: Weather Change 🌧️
+
 ```
 Lap: 25/50
-Tire Wear: 60%
-Fuel Level: 70%
-→ Expected: "STAY OUT" or "PIT NEXT LAP"
+Weather: Light Rain
+Current Tires: Slicks
+Track Temp: Dropping
 ```
 
-## Troubleshooting
+**Expected:** `PIT_NOW` for intermediate tires
 
-### Dashboard won't start?
+---
+
+### Scenario 4: Undercut Opportunity 🎯
+
+```
+Lap: 22/50
+Position: P3
+Gap to P2: 2.8s
+Tire Wear: 72%
+Competitor Tire Age: +5 laps
+```
+
+**Expected:** `PIT_NEXT_LAP` for undercut strategy
+
+---
+
+### Scenario 5: Optimal Strategy ✅
+
+```
+Lap: 25/50
+Tire Wear: 58%
+Fuel: 70%
+Position: P2
+Track: Green
+```
+
+**Expected:** `STAY_OUT` with medium confidence
+
+---
+
+## 🔧 Troubleshooting
+
+### Dashboard Won't Start?
+
 ```bash
 # Check Python version
 python --version  # Should be 3.9+
 
-# Reinstall Streamlit
-pip install --upgrade streamlit
+# Check Node version
+node --version    # Should be 18+
+
+# Reinstall dependencies
+pip install --upgrade -r requirements.txt
+cd frontend && npm install
 ```
 
-### Import errors?
-```bash
-# Make sure you're in the project root
-cd ai-race-engineer-copilot
+### Import Errors?
 
-# Reinstall all dependencies
+```bash
+# Ensure you're in project root
+pwd  # Should show: .../ai-race-engineer-copilot
+
+# Activate virtual environment
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Reinstall packages
 pip install -r requirements.txt
 ```
 
-### IBM Granite not working?
-- Dashboard works in demo mode without credentials
-- Check `.env` file exists and has correct format
-- Verify API key is valid in IBM Cloud console
+### Frontend Build Errors?
 
-## Next Steps
+```bash
+cd frontend
 
-1. **Explore Features**: Try different race scenarios
-2. **Read Documentation**: Check [`docs/FRONTEND_README.md`](docs/FRONTEND_README.md)
-3. **Setup Langflow**: Follow [`workflows/langflow_setup.md`](workflows/langflow_setup.md)
-4. **Customize**: Modify components in `frontend/components/`
+# Clear cache and reinstall
+rm -rf node_modules package-lock.json
+npm install
 
-## Getting Help
+# Try running again
+npm run dev
+```
 
-- 📖 [Full Documentation](docs/)
-- 🐛 [Report Issues](https://github.com/yourusername/ai-race-engineer-copilot/issues)
-- 💬 [Discussions](https://github.com/yourusername/ai-race-engineer-copilot/discussions)
+### IBM Granite Not Working?
 
-## Key Features to Try
+**Don't worry!** The dashboard works in **demo mode** without IBM credentials.
 
-✅ **Real-time Strategy Analysis** - Get instant AI recommendations  
-✅ **Interactive Visualizations** - Explore tire and fuel data  
-✅ **Multiple Scenarios** - Test different race conditions  
-✅ **Explainable AI** - Understand every recommendation  
-✅ **Professional UI** - F1-inspired racing dashboard  
+To enable full AI features:
+1. Create IBM Cloud account at [cloud.ibm.com](https://cloud.ibm.com)
+2. Set up watsonx.ai project
+3. Get API key from IBM Cloud console
+4. Add credentials to `.env` file
+
+**Demo mode provides:**
+- ✅ Full UI functionality
+- ✅ Strategy recommendations
+- ✅ Telemetry visualization
+- ⚠️ Simulated AI explanations (not real Granite)
 
 ---
 
-**Ready to race? Start the dashboard and experience AI-powered strategy! 🏎️💨**
+## 📚 Next Steps
 
-Built with ❤️ for IBM SkillsBuild AI Builders Challenge
+### 🎓 Learn More
+
+1. **[📖 Full Documentation](docs/)** — Comprehensive guides
+2. **[🏗️ Architecture Overview](docs/architecture.md)** — System design
+3. **[🤖 IBM Tools Usage](IBM_TOOLS_USAGE.md)** — Granite, watsonx.ai, Langflow
+4. **[🎨 Frontend Guide](docs/FRONTEND_README.md)** — React dashboard details
+
+### 🛠️ Customize
+
+1. **Add Race Scenarios** — Create JSON files in `data/sample_races/`
+2. **Modify Components** — Edit React components in `frontend/src/components/`
+3. **Extend AI Logic** — Update `src/ai/granite_engine.py`
+4. **Create Workflows** — Design Langflow pipelines in `workflows/`
+
+### 🤝 Contribute
+
+1. **[📝 Contributing Guide](CONTRIBUTING.md)** — How to contribute
+2. **[🐛 Report Issues](https://github.com/yourusername/ai-race-engineer-copilot/issues)** — Bug reports
+3. **[💬 Discussions](https://github.com/yourusername/ai-race-engineer-copilot/discussions)** — Questions and ideas
+
+---
+
+## 🎯 Key Features to Explore
+
+### ✅ Real-Time Strategy Analysis
+Get instant AI recommendations based on current race conditions
+
+### ✅ Explainable AI Reasoning
+Understand exactly why the AI recommends each strategy
+
+### ✅ Interactive Visualizations
+Explore tire wear, fuel consumption, and performance data
+
+### ✅ Multiple Scenarios
+Test different race conditions and see how strategies change
+
+### ✅ Professional UI
+Experience an F1-inspired racing dashboard
+
+### ✅ Live Simulation
+Watch dynamic race events unfold with real-time updates
+
+---
+
+## 💡 Pro Tips
+
+### Tip 1: Start with Demo Scenarios
+Use the pre-configured scenarios to understand how the AI analyzes different situations.
+
+### Tip 2: Compare Strategies
+Try similar conditions with small variations to see how the AI adapts its recommendations.
+
+### Tip 3: Check Confidence Scores
+Higher confidence (>80%) means the AI is very certain. Lower confidence suggests multiple viable options.
+
+### Tip 4: Read the Reasoning
+The AI's explanation shows which factors influenced the decision most.
+
+### Tip 5: Explore Analytics
+The charts reveal patterns in tire wear and fuel consumption that inform strategy.
+
+---
+
+## 📞 Getting Help
+
+### Documentation
+- **[README](README.md)** — Project overview
+- **[Architecture](docs/architecture.md)** — Technical details
+- **[Frontend Guide](docs/FRONTEND_README.md)** — UI documentation
+
+### Community
+- **[GitHub Issues](https://github.com/yourusername/ai-race-engineer-copilot/issues)** — Bug reports
+- **[Discussions](https://github.com/yourusername/ai-race-engineer-copilot/discussions)** — Q&A
+
+### Resources
+- **[IBM Granite Docs](https://www.ibm.com/granite)** — AI model documentation
+- **[watsonx.ai Guide](https://www.ibm.com/watsonx)** — Platform documentation
+- **[Langflow Docs](https://docs.langflow.org)** — Workflow orchestration
+
+---
+
+## 🏁 Ready to Race!
+
+You're all set! Start the dashboard and experience AI-powered racing strategy:
+
+```bash
+cd frontend
+npm run dev
+```
+
+**Open:** `http://localhost:5173`
+
+---
+
+<div align="center">
+
+### Built with ❤️ for the IBM SkillsBuild AI Builders Challenge
+
+🏎️ **AI Race Engineer Copilot** — *Intelligent, Explainable, Real-Time*
+
+**[⭐ Star on GitHub](https://github.com/yourusername/ai-race-engineer-copilot)** • **[📖 Read Docs](docs/)** • **[🎥 Watch Demo](#)**
+
+</div>
