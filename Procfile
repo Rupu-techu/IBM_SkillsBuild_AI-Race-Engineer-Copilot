@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run frontend/app.py --server.port=$PORT --server.address=0.0.0.0
+web: cd frontend && npm run dev -- --host 0.0.0.0 --port $PORT

@@ -12,7 +12,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from frontend.utils.watsonx_config import get_watsonx_config, load_environment, mask_secret
+from src.ai.watsonx_config import get_watsonx_config, load_environment, mask_secret
 
 
 def check_environment() -> bool:
@@ -53,25 +53,27 @@ def main():
 
     check_environment()
 
-    print("\nStarting Streamlit dashboard...")
-    print("Dashboard will open in your browser at http://localhost:8501")
+    print("\nStarting React dashboard...")
+    print("Dashboard will open in your browser at http://localhost:5173")
     print("\nPress Ctrl+C to stop the server")
     print("=" * 60)
     print()
 
-    app_path = PROJECT_ROOT / "frontend" / "app.py"
+    frontend_path = PROJECT_ROOT / "frontend"
 
     try:
         subprocess.run(
             [
-                sys.executable,
-                "-m",
-                "streamlit",
+                "npm",
                 "run",
-                str(app_path),
-                "--server.headless",
-                "false",
-            ]
+                "dev",
+                "--",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "5173",
+            ],
+            cwd=frontend_path,
         )
     except KeyboardInterrupt:
         print("\n\nShutting down dashboard...")
