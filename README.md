@@ -13,9 +13,6 @@
 [![React](https://img.shields.io/badge/React-18.0+-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
- • [📖 Documentation](docs/) • [🎯 Quick Start](QUICKSTART.md) •
-
-![AI Race Engineer Dashboard](docs/images/dashboard-hero.png)
 
 *Transform racing telemetry into intelligent, explainable strategy decisions in real-time*
 
