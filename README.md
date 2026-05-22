@@ -557,6 +557,6 @@ This project is submitted for the **IBM SkillsBuild AI Builders Challenge**, dem
 
 **[⭐ Star this repo](https://github.com/yourusername/ai-race-engineer-copilot)** if you find it interesting!
 
-**[🚀 Try the Demo](#)** • **[📖 Read the Docs](docs/)** • **[🎥 Watch Video](#)**
+**[🚀 Try the Demo](#)** • **[📖 Read the Docs](docs/)** • 
 
 </div>
